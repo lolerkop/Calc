@@ -24,53 +24,177 @@ const CryptoConverter = () => {
       label: "Bitcoin (BTC)", 
       symbol: "₿",
       type: "crypto",
-      change: "+2.4%"
+      change: "+2.4%",
+      coinGeckoId: "bitcoin"
     },
     { 
       value: "ETH", 
       label: "Ethereum (ETH)", 
       symbol: "Ξ",
       type: "crypto",
-      change: "+1.8%"
+      change: "+1.8%",
+      coinGeckoId: "ethereum"
     },
     { 
       value: "BNB", 
       label: "Binance Coin (BNB)", 
       symbol: "BNB",
       type: "crypto",
-      change: "-0.9%"
+      change: "-0.9%",
+      coinGeckoId: "binancecoin"
     },
     { 
       value: "USD", 
       label: "US Dollar (USD)", 
       symbol: "$",
       type: "fiat",
-      change: "0.0%"
+      change: "0.0%",
+      coinGeckoId: "usd"
     },
     { 
       value: "EUR", 
       label: "Euro (EUR)", 
       symbol: "€",
       type: "fiat",
-      change: "+0.1%"
+      change: "+0.1%",
+      coinGeckoId: "eur"
     },
     { 
       value: "RUB", 
       label: "Рубль (RUB)", 
       symbol: "₽",
       type: "fiat",
-      change: "-0.3%"
+      change: "-0.3%",
+      coinGeckoId: "rub"
     }
   ];
+
+  // Функция для получения актуальных курсов с CoinGecko API
+  const fetchCryptoRates = async () => {
+    try {
+      setUpdateError(false);
+      const cryptoIds = currencies
+        .filter(c => c.type === "crypto")
+        .map(c => c.coinGeckoId)
+        .join(',');
+      
+      const response = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds}&vs_currencies=usd,eur,rub&include_24hr_change=true`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          }
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+      
+      const data = await response.json();
+      
+      // Преобразуем данные в нужный формат
+      const newRates = {};
+      
+      // Заполняем курсы криптовалют
+      Object.keys(data).forEach(coinId => {
+        const currency = currencies.find(c => c.coinGeckoId === coinId);
+        if (currency) {
+          newRates[currency.value] = {
+            USD: data[coinId].usd,
+            EUR: data[coinId].eur,
+            RUB: data[coinId].rub,
+            change24h: data[coinId].usd_24h_change || 0
+          };
+        }
+      });
+      
+      // Добавляем обратные курсы для фиатных валют
+      newRates.USD = {
+        BTC: newRates.BTC ? 1 / newRates.BTC.USD : 0,
+        ETH: newRates.ETH ? 1 / newRates.ETH.USD : 0,
+        BNB: newRates.BNB ? 1 / newRates.BNB.USD : 0,
+        EUR: 0.92, // Примерный курс EUR/USD
+        RUB: 92    // Примерный курс RUB/USD
+      };
+      
+      newRates.EUR = {
+        BTC: newRates.BTC ? 1 / newRates.BTC.EUR : 0,
+        ETH: newRates.ETH ? 1 / newRates.ETH.EUR : 0,
+        BNB: newRates.BNB ? 1 / newRates.BNB.EUR : 0,
+        USD: 1.09,
+        RUB: 100
+      };
+      
+      newRates.RUB = {
+        BTC: newRates.BTC ? 1 / newRates.BTC.RUB : 0,
+        ETH: newRates.ETH ? 1 / newRates.ETH.RUB : 0,
+        BNB: newRates.BNB ? 1 / newRates.BNB.RUB : 0,
+        USD: 0.0109,
+        EUR: 0.01
+      };
+      
+      // Добавляем курсы крипта к крипте
+      if (newRates.BTC && newRates.ETH) {
+        newRates.BTC.ETH = newRates.BTC.USD / newRates.ETH.USD;
+        newRates.ETH.BTC = newRates.ETH.USD / newRates.BTC.USD;
+      }
+      if (newRates.BTC && newRates.BNB) {
+        newRates.BTC.BNB = newRates.BTC.USD / newRates.BNB.USD;
+        newRates.BNB.BTC = newRates.BNB.USD / newRates.BTC.USD;
+      }
+      if (newRates.ETH && newRates.BNB) {
+        newRates.ETH.BNB = newRates.ETH.USD / newRates.BNB.USD;
+        newRates.BNB.ETH = newRates.BNB.USD / newRates.ETH.USD;
+      }
+      
+      setRates(newRates);
+      setLastUpdate(new Date());
+      setIsOnline(true);
+      
+      // Обновляем изменения цен в currencies
+      currencies.forEach(currency => {
+        if (currency.type === "crypto" && newRates[currency.value]) {
+          const change = newRates[currency.value].change24h;
+          currency.change = change > 0 ? `+${change.toFixed(1)}%` : `${change.toFixed(1)}%`;
+        }
+      });
+      
+    } catch (error) {
+      console.error('Ошибка получения курсов:', error);
+      setUpdateError(true);
+      setIsOnline(false);
+      
+      // Используем резервные курсы при ошибке
+      const fallbackRates = {
+        BTC: { USD: 65000, EUR: 60000, RUB: 6000000, ETH: 18.5, BNB: 95.2 },
+        ETH: { USD: 3500, EUR: 3200, RUB: 320000, BTC: 0.054, BNB: 5.1 },
+        BNB: { USD: 680, EUR: 620, RUB: 62000, BTC: 0.0105, ETH: 0.196 },
+        USD: { BTC: 0.0000154, ETH: 0.000286, BNB: 0.00147, EUR: 0.92, RUB: 92 },
+        EUR: { BTC: 0.0000167, ETH: 0.000313, BNB: 0.00161, USD: 1.09, RUB: 100 },
+        RUB: { BTC: 0.000000167, ETH: 0.00000313, BNB: 0.0000161, USD: 0.0109, EUR: 0.01 }
+      };
+      setRates(fallbackRates);
+    }
+  };
+
+  // Автообновление курсов каждые 2 минуты
+  useEffect(() => {
+    fetchCryptoRates(); // Загружаем курсы при монтировании компонента
+    
+    const interval = setInterval(() => {
+      fetchCryptoRates();
+    }, 120000); // 120000 мс = 2 минуты
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const calculateConversion = useCallback(async () => {
     if (!amount || !fromCurrency || !toCurrency) return;
 
     setLoading(true);
     
-    // Имитация API запроса
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     const amt = parseFloat(amount);
     if (amt <= 0) {
       setLoading(false);
@@ -80,12 +204,12 @@ const CryptoConverter = () => {
     let rate = 1;
     if (fromCurrency === toCurrency) {
       rate = 1;
-    } else if (mockRates[fromCurrency] && mockRates[fromCurrency][toCurrency]) {
-      rate = mockRates[fromCurrency][toCurrency];
+    } else if (rates[fromCurrency] && rates[fromCurrency][toCurrency]) {
+      rate = rates[fromCurrency][toCurrency];
     } else {
       // Конвертация через USD если прямого курса нет
-      const fromToUSD = mockRates[fromCurrency]?.USD || 1;
-      const USDToTo = mockRates.USD?.[toCurrency] || 1;
+      const fromToUSD = rates[fromCurrency]?.USD || 1;
+      const USDToTo = rates.USD?.[toCurrency] || 1;
       rate = fromToUSD * USDToTo;
     }
 
@@ -104,7 +228,7 @@ const CryptoConverter = () => {
     });
 
     setLoading(false);
-  }, [amount, fromCurrency, toCurrency]);
+  }, [amount, fromCurrency, toCurrency, rates]);
 
   const swapCurrencies = () => {
     const temp = fromCurrency;
