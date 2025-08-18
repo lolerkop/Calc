@@ -115,7 +115,7 @@ const DepositCalculator = () => {
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl">
-              <Piggy Bank className="h-6 w-6 text-white" />
+              <PiggyBank className="h-6 w-6 text-white" />
             </div>
             <div>
               <CardTitle className="text-2xl">Калькулятор вклада</CardTitle>
