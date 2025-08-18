@@ -268,9 +268,26 @@ const CryptoConverter = () => {
               <Bitcoin className="h-6 w-6 text-white" />
             </div>
             <div>
-              <CardTitle className="text-2xl">Конвертер криптовалют</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                Конвертер криптовалют
+                {isOnline ? (
+                  <Wifi className="w-5 h-5 text-green-500" />
+                ) : (
+                  <WifiOff className="w-5 h-5 text-red-500" />
+                )}
+              </CardTitle>
+              <CardDescription className="flex items-center gap-2">
                 Перевод между криптовалютами и фиатными валютами
+                {lastUpdate && (
+                  <Badge variant="outline" className="text-xs">
+                    {isOnline ? 'Обновлено' : 'Офлайн режим'}: {lastUpdate.toLocaleTimeString('ru-RU')}
+                  </Badge>
+                )}
+                {updateError && (
+                  <Badge variant="destructive" className="text-xs">
+                    Используются резервные курсы
+                  </Badge>
+                )}
               </CardDescription>
             </div>
           </div>
