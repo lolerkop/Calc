@@ -445,22 +445,63 @@ const CryptoConverter = () => {
       {/* Popular Pairs */}
       <Card className="mt-8">
         <CardHeader>
-          <CardTitle>Популярные пары</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            Курсы популярных валют
+            <Badge variant="outline" className="text-xs">
+              {isOnline ? (
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  Онлайн
+                </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  Офлайн
+                </div>
+              )}
+            </Badge>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { from: "BTC", to: "USD", rate: "65,000" },
-              { from: "ETH", to: "USD", rate: "3,500" },
-              { from: "BTC", to: "RUB", rate: "6,000,000" },
-              { from: "ETH", to: "BTC", rate: "0.054" }
-            ].map((pair, index) => (
-              <div key={index} className="bg-gray-50 p-3 rounded-lg text-center">
-                <p className="font-semibold text-sm">{pair.from}/{pair.to}</p>
-                <p className="text-lg font-bold text-yellow-600">{pair.rate}</p>
-              </div>
-            ))}
+              { pair: "BTC/USD", from: "BTC", to: "USD", flag: "₿→$" },
+              { pair: "ETH/USD", from: "ETH", to: "USD", flag: "Ξ→$" },
+              { pair: "BNB/USD", from: "BNB", to: "USD", flag: "BNB→$" },
+              { pair: "BTC/RUB", from: "BTC", to: "RUB", flag: "₿→₽" },
+              { pair: "ETH/RUB", from: "ETH", to: "RUB", flag: "Ξ→₽" },
+              { pair: "BTC/ETH", from: "BTC", to: "ETH", flag: "₿→Ξ" }
+            ].map((item, index) => {
+              const rate = rates[item.from]?.[item.to];
+              const change = rates[item.from]?.change24h;
+              
+              return (
+                <div key={index} className="bg-gray-50 p-3 rounded-lg text-center">
+                  <p className="text-xs text-gray-500 mb-1">{item.flag}</p>
+                  <p className="font-semibold text-sm">{item.pair}</p>
+                  <p className="text-lg font-bold text-yellow-600">
+                    {rate ? formatNumber(rate, item.to === 'USD' ? 0 : 8) : '...'}
+                  </p>
+                  {change && (
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs ${change > 0 ? 'text-green-600 border-green-200' : 'text-red-600 border-red-200'}`}
+                    >
+                      {change > 0 ? '+' : ''}{change.toFixed(1)}%
+                    </Badge>
+                  )}
+                </div>
+              );
+            })}
           </div>
+          
+          {lastUpdate && (
+            <div className="mt-4 text-center">
+              <Badge variant="secondary" className="text-xs">
+                Последнее обновление: {lastUpdate.toLocaleString('ru-RU')} • Автообновление каждые 2 минуты
+              </Badge>
+            </div>
+          )}
         </CardContent>
       </Card>
 
