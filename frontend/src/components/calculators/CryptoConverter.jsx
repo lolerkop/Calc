@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Badge } from "../ui/badge";
-import { Bitcoin, Calculator, RefreshCcw, TrendingUp, TrendingDown } from "lucide-react";
+import { Bitcoin, Calculator, RefreshCcw, TrendingUp, TrendingDown, Wifi, WifiOff } from "lucide-react";
 
 const CryptoConverter = () => {
   const [amount, setAmount] = useState("");
@@ -13,16 +13,10 @@ const CryptoConverter = () => {
   const [toCurrency, setToCurrency] = useState("USD");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  // Mock курсы (в реальном приложении здесь был бы API)
-  const mockRates = {
-    BTC: { USD: 65000, EUR: 60000, RUB: 6000000, ETH: 18.5, BNB: 95.2 },
-    ETH: { USD: 3500, EUR: 3200, RUB: 320000, BTC: 0.054, BNB: 5.1 },
-    BNB: { USD: 680, EUR: 620, RUB: 62000, BTC: 0.0105, ETH: 0.196 },
-    USD: { BTC: 0.0000154, ETH: 0.000286, BNB: 0.00147, EUR: 0.92, RUB: 92 },
-    EUR: { BTC: 0.0000167, ETH: 0.000313, BNB: 0.00161, USD: 1.09, RUB: 100 },
-    RUB: { BTC: 0.000000167, ETH: 0.00000313, BNB: 0.0000161, USD: 0.0109, EUR: 0.01 }
-  };
+  const [rates, setRates] = useState({});
+  const [lastUpdate, setLastUpdate] = useState(null);
+  const [isOnline, setIsOnline] = useState(true);
+  const [updateError, setUpdateError] = useState(false);
 
   const currencies = [
     { 
