@@ -200,7 +200,7 @@ const BMICalculator = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
               <h4 className="font-semibold text-blue-800">Недостаточный вес</h4>
-              <p className="text-blue-600">ИМТ < 18.5</p>
+              <p className="text-blue-600">ИМТ &lt; 18.5</p>
             </div>
             <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded">
               <h4 className="font-semibold text-green-800">Нормальный вес</h4>
