@@ -363,18 +363,30 @@ const CryptoConverter = () => {
               </Select>
             </div>
 
-            <Button 
-              onClick={calculateConversion} 
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-lg py-6"
-            >
-              {loading ? (
-                <RefreshCcw className="w-5 h-5 mr-2 animate-spin" />
-              ) : (
-                <Calculator className="w-5 h-5 mr-2" />
-              )}
-              {loading ? "Получение курса..." : "Конвертировать"}
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={calculateConversion} 
+                disabled={loading}
+                className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-lg py-6"
+              >
+                {loading ? (
+                  <RefreshCcw className="w-5 h-5 mr-2 animate-spin" />
+                ) : (
+                  <Calculator className="w-5 h-5 mr-2" />
+                )}
+                {loading ? "Конвертация..." : "Конвертировать"}
+              </Button>
+              
+              <Button 
+                onClick={fetchCryptoRates}
+                variant="outline"
+                size="lg"
+                className="px-4"
+                title="Обновить курсы"
+              >
+                <RefreshCcw className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
 
           {/* Results */}
