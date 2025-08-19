@@ -105,9 +105,9 @@
 user_problem_statement: "Пользователь хочет сделать все калькуляторы в приложении CALC.IT полностью функциональными. Многие калькуляторы находятся в статусе 'в разработке' или 'скоро' и не работают. Необходимо доделать их полностью работоспособными."
 
 frontend:
-  - task: "Доработка недостающих калькуляторов"
-    implemented: false
-    working: false
+  - task: "Полная реализация всех калькуляторов"
+    implemented: true
+    working: true
     file: "/app/frontend/src/components/calculators/*.jsx"
     stuck_count: 0
     priority: "high"
@@ -115,21 +115,26 @@ frontend:
     status_history:
       - working: false
         agent: "main"
-        comment: "Обнаружены калькуляторы требующие доработки: TimeCalculator показывает 'в разработке', нужно проверить остальные"
+        comment: "Обнаружены калькуляторы требующие доработки: TimeCalculator, TaxesCalculator, MiningCalculator, StakingCalculator, GPUROICalculator, RefinancingCalculator показывали 'в разработке'"
+      - working: true
+        agent: "main"
+        comment: "Все недостающие калькуляторы полностью реализованы: TimeCalculator (операции со временем), TaxesCalculator (подоходный налог, налог с продаж, налог на прибыль), MiningCalculator (прибыльность майнинга), StakingCalculator (доходность стейкинга), GPUROICalculator (окупаемость видеокарт), RefinancingCalculator (выгода рефинансирования). Все имеют полную функциональность, расчеты, валидацию и информационные разделы."
 
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
   current_focus:
-    - "Доработка недостающих калькуляторов"
+    - "Полная реализация всех калькуляторов"
   stuck_tasks: []
-  test_all: false
+  test_all: true
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
     message: "Начинаю анализ калькуляторов. Обнаружен TimeCalculator в состоянии 'в разработке'. Проверяю остальные калькуляторы на полноту реализации."
+  - agent: "main"
+    message: "Реализованы все недостающие калькуляторы: TimeCalculator, TaxesCalculator, MiningCalculator, StakingCalculator, GPUROICalculator, RefinancingCalculator. Все теперь полностью функциональны с расчетами, валидацией входных данных, форматированием результатов и подробными информационными разделами. Готово к тестированию."
