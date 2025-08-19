@@ -2,6 +2,9 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { getCalculatorData, getCategoryData } from "../utils/calculatorData";
+import { getSEOData } from "../utils/seoData";
+import SEOHead from "../components/SEOHead";
+import SEOContent from "../components/SEOContent";
 import CompoundInterestCalculator from "../components/calculators/CompoundInterestCalculator";
 import InvestmentCalculator from "../components/calculators/InvestmentCalculator";
 import DepositCalculator from "../components/calculators/DepositCalculator";
@@ -30,14 +33,22 @@ import CryptoConverter from "../components/calculators/CryptoConverter";
 const CalculatorPage = () => {
   const { calculatorId } = useParams();
   const calculatorData = getCalculatorData(calculatorId);
+  const seoData = getSEOData(calculatorId);
 
   if (!calculatorData) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">Калькулятор не найден</h1>
-          <Link to="/">
-            <Button>Вернуться на главную</Button>
+      <>
+        <SEOHead 
+          title="Калькулятор не найден | CALC.IT"
+          description="Запрашиваемый калькулятор не найден. Вернитесь на главную страницу чтобы выбрать нужный калькулятор."
+          canonicalUrl={`/calculator/${calculatorId}`}
+          noindex={true}
+        />
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold mb-4">Калькулятор не найден</h1>
+            <Link to="/">
+              <Button>Вернуться на главную</Button>
           </Link>
         </div>
       </div>
