@@ -177,12 +177,6 @@ export const calculatorData = {
         name: "Конвертер криптовалют",
         description: "Перевод между криптовалютами и фиатом",
         category: "crypto"
-      },
-      {
-        id: "gpu-roi",
-        name: "Окупаемость видеокарт",
-        description: "Расчет окупаемости видеокарт для майнинга",
-        category: "crypto"
       }
     ]
   }
