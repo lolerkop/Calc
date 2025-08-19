@@ -1,0 +1,134 @@
+<analysis>
+The previous AI engineer initiated the development of CALC.IT, an online calculator service, from scratch. The process began with a detailed application description and environment setup guidelines. The AI engineer adopted a frontend-first approach, creating a functional, mock-data-driven UI. Extensive use of bulk file writes facilitated rapid component generation for various calculators and navigation pages.
+
+Initial challenges included resolving frontend compilation errors related to icon imports and ensuring UI responsiveness via screenshot tools. After establishing a robust frontend, the user requested an auto-update feature for cryptocurrency rates. The AI engineer integrated the CoinGecko API for real-time data, enhancing the Crypto Converter with dynamic updates, status indicators, and error handling for API unavailability.
+
+The current phase involves making all remaining in development calculators fully functional, as per the user's explicit request. The AI engineer encountered a  argument list length limit, necessitating a shift to creating these files individually. The project is currently in the process of completing all calculator functionalities.
+</analysis>
+
+<product_requirements>
+The user requested a full-stack web application named CALC.IT, an online universal calculator service.
+
+**Problem Statement:** Users need a centralized platform for various types of calculators, including financial, mortgage, health, academic, business, and cryptocurrency. The existing solutions might be scattered, lack modern design, or extensibility.
+
+**Desired Features:**
+1.  **Main Page:**
+    *   Title: CALC.IT — все калькуляторы онлайн (CALC.IT — all calculators online).
+    *   Brief description covering financial, mortgage, sports, academic, business, and crypto calculators.
+    *   Category navigation via menu or cards: Финансы, Кредиты и ипотека, Здоровье и спорт, Учёба и повседневка, Для бизнеса, Криптовалюта и IT.
+2.  **Category Page:**
+    *   List of calculators within the selected category, each with a brief description.
+3.  **Specific Calculator Page:**
+    *   Title: Калькулятор [название] (Calculator [name]).
+    *   Input fields (e.g., amount, term, percentage).
+    *   Рассчитать (Calculate) button.
+    *   Result display with explanations.
+    *   Explanatory text and examples below the calculator.
+
+**List of Calculators (by Category):**
+*   **Финансы (Finance):** Compound interest, investments, deposits, inflation, currency converter.
+*   **Кредиты и ипотека (Loans & Mortgage):** Mortgage, loan, car loan, refinancing.
+*   **Здоровье и спорт (Health & Sport):** Calories, BMI, water intake, running.
+*   **Учёба и повседневка (Study & Everyday):** Percentages, fractions, dates, time.
+*   **Для бизнеса (For Business):** VAT, taxes, salary, marginality.
+*   **Криптовалюта и IT (Cryptocurrency & IT):** Mining, staking, cryptocurrency converter, GPU ROI.
+
+**Design Requirements:**
+*   Modern, neat, well-designed.
+*   Responsive layout (PC and mobile).
+*   Convenient category navigation.
+*   Clean, understandable interface without clutter.
+*   Adherence to general design guidelines (no centered container, specific color palette rules, use of  for icons, use of Shadcn UI components).
+
+**Technical Requirements:**
+*   Clean HTML + CSS + JS (minimal frameworks, though React is used).
+*   SEO optimization (h1-h2, meta tags, descriptions).
+*   Easily extensible code for adding new calculators.
+*   User explicitly requested full functional calculators and customizable currency.
+*   Auto-updating cryptocurrency rates via an external API (CoinGecko API was chosen).
+*   All calculators to be fully functional, addressing in development statuses.
+
+**Current Implementation State:**
+The frontend structure with navigation, category pages, and individual calculator pages is largely established. Many calculators are implemented with their core logic, and the cryptocurrency converter is integrated with real-time CoinGecko API data. The immediate work involves completing the remaining calculators that are currently placeholders.
+</product_requirements>
+
+<key_technical_concepts>
+- **React**: Frontend framework for building UI components.
+- **FastAPI**: Backend framework (Python) for API services.
+- **MongoDB**: NoSQL database for data persistence.
+- **Shadcn UI**: Component library for modern UI elements.
+- **React Router DOM**: For client-side routing.
+- **Axios**: HTTP client for API requests.
+- **CoinGecko API**: Third-party API for fetching real-time cryptocurrency rates.
+- **Environment Variables**: ,  for configuration.
+- **Supervisor**: Manages backend and frontend processes.
+- **Hot Reload**: For development efficiency.
+- **Modular Design**: Separating each calculator into its own component.
+</key_technical_concepts>
+
+<code_architecture>
+The application follows a full-stack architecture with a React frontend, a FastAPI backend, and a MongoDB database.
+
+**Directory Structure:**
+
+
+**Key Files and Their Importance/Changes:**
+
+*   :
+    *   **Importance:** This is the main entry point for the React application. It sets up  for routing and defines the main routes for , , and . It also handles initial backend connectivity checks ().
+    *   **Changes Made:** Modified to include routing for the home page, category pages, and individual calculator pages, dynamically rendering components based on the URL.
+
+*   :
+    *   **Importance:** Represents the landing page of CALC.IT, displaying the application title, description, and categories of calculators (likely as cards or menu items).
+    *   **Changes Made:** Created from scratch to establish the main entry point and category navigation.
+
+*   :
+    *   **Importance:** Displays a list of calculators belonging to a specific category, allowing users to navigate to individual calculator detail pages.
+    *   **Changes Made:** Created to handle category-specific calculator listings.
+
+*   :
+    *   **Importance:** A generic page component that dynamically renders the specific calculator component based on the URL parameter. It serves as a container for each calculator's UI and logic.
+    *   **Changes Made:** Created to provide a consistent wrapper for all calculator components, including their titles, input fields, calculation buttons, and result displays.
+
+*   :
+    *   **Importance:** A central utility file that holds metadata about all calculator categories and individual calculators (names, descriptions, paths, and component mappings). Initially used to mock data for frontend-only development.
+    *   **Changes Made:** Created to structure the application's content and routing paths. Updated as new calculators were added.
+
+*   :
+    *   **Importance:** Each file (e.g., , , ) encapsulates the specific UI and calculation logic for an individual calculator. This modularity makes the application extensible.
+    *   **Changes Made:** Numerous files were created in bulk (, , , , , , , , , , , , , , , , , , , , , , , ).  had a specific import error fixed.  was significantly updated to integrate with the CoinGecko API for real-time rates, including API calls, state management for rates, refresh functionality, and displaying connection status.
+
+*   , , :
+    *   **Importance:** These files define the global styles, Tailwind CSS configuration, and theming (dark/light mode) for the frontend.
+    *   **Changes Made:**  might have had minor adjustments.  and  were set up for Shadcn UI and custom theming, no significant functional changes related to the calculator logic itself were noted in the trajectory.
+
+*   :
+    *   **Importance:** The FastAPI backend server, responsible for handling API requests and interacting with MongoDB. It currently has basic endpoints (, ).
+    *   **Changes Made:** No changes related to the calculator functionality were made during this trajectory, as the focus was on frontend development and the crypto API integration was direct from frontend.
+</code_architecture>
+
+<pending_tasks>
+- Complete the implementation of all remaining calculator components that are currently placeholders or marked as in development to ensure they are fully functional. This is a direct continuation of the last user request.
+</pending_tasks>
+
+<current_work>
+The AI engineer's current work is focused on making all calculators fully functional, as per the user's explicit instruction: Но всё еще многие калькуляторы там находятся в статусе «в разработке или скоро» в общем не работают. Сделай их полностью работоспособными и полностью доделаными (But many calculators there are still in development or coming soon status, generally not working. Make them fully functional and completely finished).
+
+Prior to this, the AI engineer successfully:
+1.  **Initialized the CALC.IT application**: Set up the basic React frontend structure with pages for Home, Category, and a generic Calculator page.
+2.  **Implemented core calculator components**: A significant number of calculators across various categories were created as frontend-only implementations, initially using mock data.
+3.  **Integrated cryptocurrency API**: The  was enhanced to fetch real-time cryptocurrency exchange rates using the CoinGecko API. This involved adding:
+    *   API call logic to .
+    *   State management for , , and .
+    *   Error handling for API failures, including a fallback to резервные курсы (fallback rates).
+    *   UI elements to display the last update time, connection status (online/offline/fallback), and a manual refresh button.
+    *   A warning box indicating that rates are fetched from a third-party API.
+    *   A fix for number formatting ( utility) to correctly display decimals.
+4.  **Performed extensive frontend testing**: Utilized the  to visually confirm UI correctness, navigation, and responsiveness across various pages (home, category, specific calculators like Compound Interest and BMI) and devices (desktop and mobile). Errors found during testing (e.g., in  icon imports) were promptly identified and fixed.
+
+Currently, the AI engineer is in the process of implementing the remaining in development calculators. The last action indicates an attempt to create multiple calculator files at once using , which failed due to the command line argument limit. The plan is now to create these files individually. The application is in a state where many calculators function, but a subset still requires complete implementation of their calculation logic and UI.
+</current_work>
+
+<optional_next_step>
+Continue implementing the remaining non-functional calculators one by one.
+</optional_next_step>
