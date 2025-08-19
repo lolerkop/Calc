@@ -101,3 +101,35 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Пользователь хочет сделать все калькуляторы в приложении CALC.IT полностью функциональными. Многие калькуляторы находятся в статусе 'в разработке' или 'скоро' и не работают. Необходимо доделать их полностью работоспособными."
+
+frontend:
+  - task: "Доработка недостающих калькуляторов"
+    implemented: false
+    working: false
+    file: "/app/frontend/src/components/calculators/*.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Обнаружены калькуляторы требующие доработки: TimeCalculator показывает 'в разработке', нужно проверить остальные"
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Доработка недостающих калькуляторов"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Начинаю анализ калькуляторов. Обнаружен TimeCalculator в состоянии 'в разработке'. Проверяю остальные калькуляторы на полноту реализации."
