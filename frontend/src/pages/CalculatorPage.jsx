@@ -26,7 +26,6 @@ import MarginCalculator from "../components/calculators/MarginCalculator";
 import MiningCalculator from "../components/calculators/MiningCalculator";
 import StakingCalculator from "../components/calculators/StakingCalculator";
 import CryptoConverter from "../components/calculators/CryptoConverter";
-import GPUROICalculator from "../components/calculators/GPUROICalculator";
 
 const CalculatorPage = () => {
   const { calculatorId } = useParams();
