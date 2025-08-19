@@ -237,16 +237,18 @@ const CryptoConverter = () => {
     setResult(null);
   };
 
-  const formatNumber = (num, decimals = 8) => {
+  const formatNumber = (num, decimals = 2) => {
+    if (!num || isNaN(num)) return '0';
+    
     if (num >= 1) {
       return new Intl.NumberFormat('ru-RU', { 
-        minimumFractionDigits: 2, 
+        minimumFractionDigits: 0, 
         maximumFractionDigits: Math.min(decimals, 2)
       }).format(num);
     }
     return new Intl.NumberFormat('ru-RU', { 
       minimumFractionDigits: 2, 
-      maximumFractionDigits: decimals
+      maximumFractionDigits: Math.min(decimals, 8)
     }).format(num);
   };
 
