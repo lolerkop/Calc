@@ -187,3 +187,5 @@ agent_communication:
     message: "Начинаю анализ калькуляторов. Обнаружен TimeCalculator в состоянии 'в разработке'. Проверяю остальные калькуляторы на полноту реализации."
   - agent: "main"
     message: "Реализованы все недостающие калькуляторы: TimeCalculator, TaxesCalculator, MiningCalculator, StakingCalculator, GPUROICalculator, RefinancingCalculator. Все теперь полностью функциональны с расчетами, валидацией входных данных, форматированием результатов и подробными информационными разделами. Готово к тестированию."
+  - agent: "testing"
+    message: "Выполнено полное тестирование backend API приложения CALC.IT. Все основные endpoints работают корректно: GET /api/ (Hello World), POST/GET /api/status (CRUD операции). MongoDB подключение функционирует правильно - данные сохраняются и извлекаются. CORS настроен для работы с фронтендом. Обработка ошибок работает корректно (404 для несуществующих endpoints, 422 для невалидных данных). Все сервисы (backend, frontend, mongodb, code-server) запущены и работают стабильно. Backend готов для работы с фронтенд калькуляторами."
