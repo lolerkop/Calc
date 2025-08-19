@@ -58,6 +58,26 @@ const CalculatorPage = () => {
 
   const categoryData = getCategoryData(calculatorData.category);
 
+  // Создаем структурированные данные для калькулятора
+  const structuredData = seoData ? {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": calculatorData.name,
+    "description": calculatorData.description,
+    "url": `https://calcit-hub.preview.emergentagent.com/calculator/${calculatorId}`,
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "RUB"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "CALC.IT"
+    }
+  } : null;
+
   const renderCalculator = () => {
     switch (calculatorId) {
       case "compound-interest":
@@ -114,40 +134,53 @@ const CalculatorPage = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb */}
-      <div className="flex flex-wrap items-center gap-2 mb-8 text-sm text-gray-600">
-        <Link to="/" className="hover:text-blue-600 transition-colors">
-          Главная
-        </Link>
-        <span>/</span>
-        <Link 
-          to={`/category/${calculatorData.category}`} 
-          className="hover:text-blue-600 transition-colors"
-        >
-          {categoryData?.title}
-        </Link>
-        <span>/</span>
-        <span className="text-gray-900 font-medium">{calculatorData.name}</span>
-      </div>
+    <>
+      {/* SEO Head */}
+      <SEOHead 
+        title={seoData?.title || `${calculatorData.name} онлайн | CALC.IT`}
+        description={seoData?.description || calculatorData.description}
+        keywords={seoData?.keywords || `${calculatorData.name}, калькулятор онлайн`}
+        canonicalUrl={`/calculator/${calculatorId}`}
+        structuredData={structuredData}
+      />
+      
+      <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <div className="flex flex-wrap items-center gap-2 mb-8 text-sm text-gray-600">
+          <Link to="/" className="hover:text-blue-600 transition-colors">
+            Главная
+          </Link>
+          <span>/</span>
+          <Link 
+            to={`/category/${calculatorData.category}`} 
+            className="hover:text-blue-600 transition-colors"
+          >
+            {categoryData?.title}
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900 font-medium">{calculatorData.name}</span>
+        </div>
 
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Калькулятор {calculatorData.name.toLowerCase()}
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          {calculatorData.description}
-        </p>
-      </div>
+        {/* Header with SEO H1 */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {seoData?.h1 || `Калькулятор ${calculatorData.name.toLowerCase()}`}
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            {calculatorData.description}
+          </p>
+        </div>
 
-      {/* Calculator Component */}
-      <div className="mb-12">
-        {renderCalculator()}
-      </div>
+        {/* Calculator Component */}
+        <div className="mb-12">
+          {renderCalculator()}
+        </div>
 
-      {/* Navigation */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* SEO Content */}
+        <SEOContent seoData={seoData} />
+
+        {/* Navigation */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
         <Link to={`/category/${calculatorData.category}`}>
           <Button variant="outline" size="lg" className="w-full sm:w-auto">
             ← Все калькуляторы категории
