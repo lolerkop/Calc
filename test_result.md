@@ -160,7 +160,7 @@ frontend:
     file: "/app/frontend/src/components/calculators/*.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "main"
@@ -168,6 +168,9 @@ frontend:
       - working: true
         agent: "main"
         comment: "Все недостающие калькуляторы полностью реализованы: TimeCalculator (операции со временем), TaxesCalculator (подоходный налог, налог с продаж, налог на прибыль), MiningCalculator (прибыльность майнинга), StakingCalculator (доходность стейкинга), GPUROICalculator (окупаемость видеокарт), RefinancingCalculator (выгода рефинансирования). Все имеют полную функциональность, расчеты, валидацию и информационные разделы."
+      - working: true
+        agent: "testing"
+        comment: "Проведено полное автоматическое тестирование всех 6 недавно реализованных калькуляторов. ✅ РЕЗУЛЬТАТЫ: Все калькуляторы полностью функциональны и доступны через навигацию. TimeCalculator (сложение/вычитание времени, конвертация) - работает с 3 вкладками. TaxesCalculator (подоходный налог, налог с продаж, налог на прибыль) - все расчеты корректны. MiningCalculator (прибыльность майнинга) - полная функциональность с выбором криптовалют. StakingCalculator (доходность стейкинга) - расчеты ROI и compound interest. GPUROICalculator (окупаемость видеокарт) - анализ окупаемости и амортизации. RefinancingCalculator (выгода рефинансирования) - сравнение кредитных условий. ✅ НЕТ сообщений 'в разработке' или 'скоро'. ✅ Мобильная адаптивность работает корректно. ✅ Навигация между категориями и калькуляторами функционирует правильно. ✅ UI имеет профессиональный дизайн с правильным брендингом CALC.IT."
 
 metadata:
   created_by: "main_agent"
