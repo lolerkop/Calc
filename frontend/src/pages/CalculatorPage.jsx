@@ -193,6 +193,7 @@ const CalculatorPage = () => {
         </Link>
       </div>
     </div>
+    </>
   );
 };
 
