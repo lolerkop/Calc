@@ -96,8 +96,6 @@ const CalculatorPage = () => {
         return <StakingCalculator />;
       case "crypto-converter":
         return <CryptoConverter />;
-      case "gpu-roi":
-        return <GPUROICalculator />;
       default:
         return <div>Калькулятор в разработке</div>;
     }
