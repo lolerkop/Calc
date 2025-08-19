@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Badge } from "../ui/badge";
-import { DollarSign, Calculator, RefreshCcw, TrendingUp, TrendingDown } from "lucide-react";
+import { DollarSign, Calculator, RefreshCcw, TrendingUp, TrendingDown, Wifi, WifiOff, Clock } from "lucide-react";
 
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState("");
@@ -13,69 +13,113 @@ const CurrencyConverter = () => {
   const [toCurrency, setToCurrency] = useState("RUB");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [rates, setRates] = useState({});
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [connectionStatus, setConnectionStatus] = useState('checking');
+  const [autoUpdateEnabled, setAutoUpdateEnabled] = useState(true);
 
-  // Mock курсы валют (в реальном приложении здесь был бы API)
-  const mockRates = {
-    USD: { RUB: 92.50, EUR: 0.92, GBP: 0.79, CNY: 7.24, JPY: 149.50 },
-    EUR: { USD: 1.09, RUB: 100.80, GBP: 0.86, CNY: 7.89, JPY: 163.20 },
-    RUB: { USD: 0.0108, EUR: 0.0099, GBP: 0.0085, CNY: 0.078, JPY: 1.62 },
-    GBP: { USD: 1.27, EUR: 1.16, RUB: 117.30, CNY: 9.19, JPY: 189.80 },
-    CNY: { USD: 0.138, EUR: 0.127, RUB: 12.82, GBP: 0.109, JPY: 20.65 },
-    JPY: { USD: 0.0067, EUR: 0.0061, RUB: 0.618, GBP: 0.0053, CNY: 0.048 }
+  // Расширенный список валют
+  const currencies = [
+    // Основные валюты
+    { value: "USD", label: "Доллар США (USD)", symbol: "$", flag: "🇺🇸", region: "Северная Америка" },
+    { value: "EUR", label: "Евро (EUR)", symbol: "€", flag: "🇪🇺", region: "Европа" },
+    { value: "RUB", label: "Российский рубль (RUB)", symbol: "₽", flag: "🇷🇺", region: "Россия" },
+    { value: "GBP", label: "Фунт стерлингов (GBP)", symbol: "£", flag: "🇬🇧", region: "Великобритания" },
+    { value: "JPY", label: "Японская иена (JPY)", symbol: "¥", flag: "🇯🇵", region: "Азия" },
+    { value: "CNY", label: "Китайский юань (CNY)", symbol: "¥", flag: "🇨🇳", region: "Азия" },
+    
+    // Дополнительные популярные валюты
+    { value: "CHF", label: "Швейцарский франк (CHF)", symbol: "Fr", flag: "🇨🇭", region: "Европа" },
+    { value: "CAD", label: "Канадский доллар (CAD)", symbol: "C$", flag: "🇨🇦", region: "Северная Америка" },
+    { value: "AUD", label: "Австралийский доллар (AUD)", symbol: "A$", flag: "🇦🇺", region: "Океания" },
+    { value: "NZD", label: "Новозеландский доллар (NZD)", symbol: "NZ$", flag: "🇳🇿", region: "Океания" },
+    { value: "SGD", label: "Сингапурский доллар (SGD)", symbol: "S$", flag: "🇸🇬", region: "Азия" },
+    { value: "HKD", label: "Гонконгский доллар (HKD)", symbol: "HK$", flag: "🇭🇰", region: "Азия" },
+    
+    // Скандинавские валюты
+    { value: "SEK", label: "Шведская крона (SEK)", symbol: "kr", flag: "🇸🇪", region: "Скандинавия" },
+    { value: "NOK", label: "Норвежская крона (NOK)", symbol: "kr", flag: "🇳🇴", region: "Скандинавия" },
+    { value: "DKK", label: "Датская крона (DKK)", symbol: "kr", flag: "🇩🇰", region: "Скандинавия" },
+    
+    // Восточная Европа
+    { value: "PLN", label: "Польский злотый (PLN)", symbol: "zł", flag: "🇵🇱", region: "Восточная Европа" },
+    { value: "CZK", label: "Чешская крона (CZK)", symbol: "Kč", flag: "🇨🇿", region: "Восточная Европа" },
+    { value: "HUF", label: "Венгерский форинт (HUF)", symbol: "Ft", flag: "🇭🇺", region: "Восточная Европа" },
+    
+    // Азиатские валюты
+    { value: "KRW", label: "Южнокорейская вона (KRW)", symbol: "₩", flag: "🇰🇷", region: "Азия" },
+    { value: "INR", label: "Индийская рупия (INR)", symbol: "₹", flag: "🇮🇳", region: "Азия" },
+    { value: "THB", label: "Тайский бат (THB)", symbol: "฿", flag: "🇹🇭", region: "Азия" },
+    
+    // Латинская Америка
+    { value: "BRL", label: "Бразильский реал (BRL)", symbol: "R$", flag: "🇧🇷", region: "Латинская Америка" },
+    { value: "MXN", label: "Мексиканское песо (MXN)", symbol: "MX$", flag: "🇲🇽", region: "Латинская Америка" },
+    { value: "ARS", label: "Аргентинское песо (ARS)", symbol: "AR$", flag: "🇦🇷", region: "Латинская Америка" },
+    
+    // Ближний Восток и Африка
+    { value: "AED", label: "Дирхам ОАЭ (AED)", symbol: "د.إ", flag: "🇦🇪", region: "Ближний Восток" },
+    { value: "SAR", label: "Саудовский риал (SAR)", symbol: "﷼", flag: "🇸🇦", region: "Ближний Восток" },
+    { value: "TRY", label: "Турецкая лира (TRY)", symbol: "₺", flag: "🇹🇷", region: "Ближний Восток" },
+    { value: "ZAR", label: "Южноафриканский ранд (ZAR)", symbol: "R", flag: "🇿🇦", region: "Африка" }
+  ];
+
+  // Резервные курсы для офлайн режима
+  const fallbackRates = {
+    USD: { EUR: 0.92, RUB: 92.50, GBP: 0.79, JPY: 149.50, CNY: 7.24, CHF: 0.88, CAD: 1.35, AUD: 1.52, NZD: 1.64, SGD: 1.35, HKD: 7.78, SEK: 10.85, NOK: 10.95, DKK: 6.86, PLN: 4.05, CZK: 22.85, HUF: 360.25, KRW: 1328.50, INR: 83.15, THB: 35.75, BRL: 5.02, MXN: 17.25, ARS: 875.50, AED: 3.67, SAR: 3.75, TRY: 27.85, ZAR: 18.75 },
+    EUR: { USD: 1.09, RUB: 100.80, GBP: 0.86, JPY: 163.20, CNY: 7.89, CHF: 0.96, CAD: 1.47, AUD: 1.66, NZD: 1.79, SGD: 1.47, HKD: 8.48, SEK: 11.82, NOK: 11.94, DKK: 7.47, PLN: 4.42, CZK: 24.91, HUF: 392.67, KRW: 1448.07, INR: 90.63, THB: 39.01, BRL: 5.47, MXN: 18.80, ARS: 954.35, AED: 4.00, SAR: 4.09, TRY: 30.37, ZAR: 20.44 },
+    RUB: { USD: 0.0108, EUR: 0.0099, GBP: 0.0085, JPY: 1.62, CNY: 0.078, CHF: 0.0095, CAD: 0.0146, AUD: 0.0164, NZD: 0.0177, SGD: 0.0146, HKD: 0.084, SEK: 0.117, NOK: 0.118, DKK: 0.074, PLN: 0.0437, CZK: 0.247, HUF: 3.89, KRW: 14.36, INR: 0.899, THB: 0.387, BRL: 0.0543, MXN: 0.187, ARS: 9.47, AED: 0.0397, SAR: 0.0406, TRY: 0.301, ZAR: 0.203 }
   };
 
-  const currencies = [
-    { 
-      value: "USD", 
-      label: "Доллар США (USD)", 
-      symbol: "$",
-      flag: "🇺🇸",
-      change: "+0.2%"
-    },
-    { 
-      value: "EUR", 
-      label: "Евро (EUR)", 
-      symbol: "€",
-      flag: "🇪🇺",
-      change: "+0.1%"
-    },
-    { 
-      value: "RUB", 
-      label: "Российский рубль (RUB)", 
-      symbol: "₽",
-      flag: "🇷🇺",
-      change: "-0.3%"
-    },
-    { 
-      value: "GBP", 
-      label: "Фунт стерлингов (GBP)", 
-      symbol: "£",
-      flag: "🇬🇧",
-      change: "+0.4%"
-    },
-    { 
-      value: "CNY", 
-      label: "Китайский юань (CNY)", 
-      symbol: "¥",
-      flag: "🇨🇳",
-      change: "-0.1%"
-    },
-    { 
-      value: "JPY", 
-      label: "Японская иена (JPY)", 
-      symbol: "¥",
-      flag: "🇯🇵",
-      change: "+0.3%"
+  // Получение курсов валют
+  const fetchRates = async () => {
+    try {
+      setConnectionStatus('fetching');
+      
+      // Используем exchangerate-api.com (бесплатный лимит 1500 запросов в месяц)
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      
+      if (!response.ok) {
+        throw new Error('API недоступно');
+      }
+      
+      const data = await response.json();
+      
+      if (data.rates) {
+        setRates(data.rates);
+        setLastUpdated(new Date());
+        setConnectionStatus('online');
+        console.log('✅ Курсы валют обновлены через API');
+      } else {
+        throw new Error('Некорректные данные');
+      }
+    } catch (error) {
+      console.warn('⚠️ Ошибка при получении курсов валют:', error.message);
+      setRates(fallbackRates.USD);
+      setLastUpdated(new Date());
+      setConnectionStatus('fallback');
     }
-  ];
+  };
+
+  // Автоматическое обновление курсов
+  useEffect(() => {
+    fetchRates();
+    
+    if (autoUpdateEnabled) {
+      const interval = setInterval(() => {
+        fetchRates();
+      }, 5 * 60 * 1000); // обновляем каждые 5 минут
+      
+      return () => clearInterval(interval);
+    }
+  }, [autoUpdateEnabled]);
 
   const convertCurrency = useCallback(async () => {
     if (!amount || !fromCurrency || !toCurrency) return;
 
     setLoading(true);
     
-    // Имитация API запроса
-    await new Promise(resolve => setTimeout(resolve, 800));
+    // Небольшая задержка для UX
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     const amt = parseFloat(amount);
     if (amt <= 0) {
@@ -84,10 +128,23 @@ const CurrencyConverter = () => {
     }
 
     let rate = 1;
+    
     if (fromCurrency === toCurrency) {
       rate = 1;
-    } else if (mockRates[fromCurrency] && mockRates[fromCurrency][toCurrency]) {
-      rate = mockRates[fromCurrency][toCurrency];
+    } else if (fromCurrency === 'USD' && rates[toCurrency]) {
+      // Конвертация из USD
+      rate = rates[toCurrency];
+    } else if (toCurrency === 'USD' && rates[fromCurrency]) {
+      // Конвертация в USD
+      rate = 1 / rates[fromCurrency];
+    } else if (rates[fromCurrency] && rates[toCurrency]) {
+      // Конвертация через USD
+      rate = rates[toCurrency] / rates[fromCurrency];
+    } else {
+      // Используем резервные курсы
+      if (fallbackRates[fromCurrency] && fallbackRates[fromCurrency][toCurrency]) {
+        rate = fallbackRates[fromCurrency][toCurrency];
+      }
     }
 
     const convertedAmount = amt * rate;
@@ -101,11 +158,12 @@ const CurrencyConverter = () => {
       rate: rate,
       fromCurrency: fromCur,
       toCurrency: toCur,
-      timestamp: new Date().toLocaleString('ru-RU')
+      timestamp: new Date().toLocaleString('ru-RU'),
+      source: connectionStatus
     });
 
     setLoading(false);
-  }, [amount, fromCurrency, toCurrency]);
+  }, [amount, fromCurrency, toCurrency, rates, connectionStatus]);
 
   const swapCurrencies = () => {
     const temp = fromCurrency;
@@ -121,27 +179,67 @@ const CurrencyConverter = () => {
     }).format(num);
   };
 
-  const getTrendIcon = (change) => {
-    return change?.startsWith('+') ? 
-      <TrendingUp className="w-3 h-3 text-green-500" /> : 
-      <TrendingDown className="w-3 h-3 text-red-500" />;
+  const getStatusIcon = () => {
+    switch (connectionStatus) {
+      case 'online': return <Wifi className="w-4 h-4 text-green-500" />;
+      case 'fallback': return <WifiOff className="w-4 h-4 text-orange-500" />;
+      case 'fetching': return <RefreshCcw className="w-4 h-4 text-blue-500 animate-spin" />;
+      default: return <Clock className="w-4 h-4 text-gray-500" />;
+    }
   };
+
+  const getStatusText = () => {
+    switch (connectionStatus) {
+      case 'online': return 'Курсы актуальны';
+      case 'fallback': return 'Резервные курсы';
+      case 'fetching': return 'Обновление...';
+      default: return 'Проверка...';
+    }
+  };
+
+  const groupedCurrencies = currencies.reduce((groups, currency) => {
+    const region = currency.region;
+    if (!groups[region]) groups[region] = [];
+    groups[region].push(currency);
+    return groups;
+  }, {});
 
   return (
     <div className="max-w-4xl mx-auto">
       <Card className="shadow-lg">
         <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl">
-              <DollarSign className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 rounded-xl">
+                <DollarSign className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-2xl">Конвертер валют</CardTitle>
+                <CardDescription>
+                  Перевод валют по актуальному курсу
+                </CardDescription>
+              </div>
             </div>
-            <div>
-              <CardTitle className="text-2xl">Конвертер валют</CardTitle>
-              <CardDescription>
-                Перевод валют по актуальному курсу
-              </CardDescription>
+            
+            <div className="flex items-center gap-2">
+              {getStatusIcon()}
+              <span className="text-sm text-gray-600">{getStatusText()}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchRates}
+                disabled={connectionStatus === 'fetching'}
+              >
+                <RefreshCcw className={`w-4 h-4 ${connectionStatus === 'fetching' ? 'animate-spin' : ''}`} />
+              </Button>
             </div>
           </div>
+          
+          {lastUpdated && (
+            <div className="text-xs text-gray-500 mt-2">
+              Последнее обновление: {lastUpdated.toLocaleString('ru-RU')}
+            </div>
+          )}
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 gap-8">
           {/* Input Form */}
@@ -165,18 +263,21 @@ const CurrencyConverter = () => {
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((curr) => (
-                    <SelectItem key={curr.value} value={curr.value}>
-                      <div className="flex items-center gap-2">
-                        <span>{curr.flag}</span>
-                        <span>{curr.label}</span>
-                        {getTrendIcon(curr.change)}
-                        <Badge variant="outline" className="text-xs">
-                          {curr.change}
-                        </Badge>
+                <SelectContent className="max-h-[300px]">
+                  {Object.entries(groupedCurrencies).map(([region, currencies]) => (
+                    <div key={region}>
+                      <div className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100">
+                        {region}
                       </div>
-                    </SelectItem>
+                      {currencies.map((curr) => (
+                        <SelectItem key={curr.value} value={curr.value}>
+                          <div className="flex items-center gap-2">
+                            <span>{curr.flag}</span>
+                            <span>{curr.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </div>
                   ))}
                 </SelectContent>
               </Select>
@@ -199,18 +300,21 @@ const CurrencyConverter = () => {
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((curr) => (
-                    <SelectItem key={curr.value} value={curr.value}>
-                      <div className="flex items-center gap-2">
-                        <span>{curr.flag}</span>
-                        <span>{curr.label}</span>
-                        {getTrendIcon(curr.change)}
-                        <Badge variant="outline" className="text-xs">
-                          {curr.change}
-                        </Badge>
+                <SelectContent className="max-h-[300px]">
+                  {Object.entries(groupedCurrencies).map(([region, currencies]) => (
+                    <div key={region}>
+                      <div className="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100">
+                        {region}
                       </div>
-                    </SelectItem>
+                      {currencies.map((curr) => (
+                        <SelectItem key={curr.value} value={curr.value}>
+                          <div className="flex items-center gap-2">
+                            <span>{curr.flag}</span>
+                            <span>{curr.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </div>
                   ))}
                 </SelectContent>
               </Select>
@@ -263,9 +367,16 @@ const CurrencyConverter = () => {
 
                     <div className="text-xs text-gray-500 bg-white p-3 rounded">
                       <p><strong>Обновлено:</strong> {result.timestamp}</p>
-                      <p className="mt-1">
-                        <Badge variant="outline" className="text-xs">
-                          Демо-курсы
+                      <p className="mt-1 flex items-center gap-2">
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs ${
+                            result.source === 'online' ? 'text-green-600' : 
+                            result.source === 'fallback' ? 'text-orange-600' : 'text-gray-600'
+                          }`}
+                        >
+                          {result.source === 'online' ? 'Актуальные курсы' : 
+                           result.source === 'fallback' ? 'Резервные курсы' : 'Курсы'}
                         </Badge>
                       </p>
                     </div>
@@ -294,25 +405,37 @@ const CurrencyConverter = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { pair: "USD/RUB", rate: "92.50", change: "+0.2%", flag: "🇺🇸→🇷🇺" },
-              { pair: "EUR/RUB", rate: "100.80", change: "+0.1%", flag: "🇪🇺→🇷🇺" },
-              { pair: "EUR/USD", rate: "1.09", change: "-0.1%", flag: "🇪🇺→🇺🇸" },
-              { pair: "GBP/USD", rate: "1.27", change: "+0.4%", flag: "🇬🇧→🇺🇸" },
-              { pair: "USD/CNY", rate: "7.24", change: "-0.1%", flag: "🇺🇸→🇨🇳" },
-              { pair: "USD/JPY", rate: "149.50", change: "+0.3%", flag: "🇺🇸→🇯🇵" }
-            ].map((item, index) => (
-              <div key={index} className="bg-gray-50 p-3 rounded-lg text-center">
-                <p className="text-xs text-gray-500 mb-1">{item.flag}</p>
-                <p className="font-semibold text-sm">{item.pair}</p>
-                <p className="text-lg font-bold text-green-600">{item.rate}</p>
-                <Badge 
-                  variant="outline" 
-                  className={`text-xs ${item.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}
-                >
-                  {item.change}
-                </Badge>
-              </div>
-            ))}
+              { pair: "USD/RUB", from: "USD", to: "RUB", flag: "🇺🇸→🇷🇺" },
+              { pair: "EUR/RUB", from: "EUR", to: "RUB", flag: "🇪🇺→🇷🇺" },
+              { pair: "EUR/USD", from: "EUR", to: "USD", flag: "🇪🇺→🇺🇸" },
+              { pair: "GBP/USD", from: "GBP", to: "USD", flag: "🇬🇧→🇺🇸" },
+              { pair: "USD/CNY", from: "USD", to: "CNY", flag: "🇺🇸→🇨🇳" },
+              { pair: "USD/JPY", from: "USD", to: "JPY", flag: "🇺🇸→🇯🇵" }
+            ].map((item, index) => {
+              let rate = "—";
+              if (rates && Object.keys(rates).length > 0) {
+                if (item.from === 'USD' && rates[item.to]) {
+                  rate = formatNumber(rates[item.to], 2);
+                } else if (item.to === 'USD' && rates[item.from]) {
+                  rate = formatNumber(1 / rates[item.from], 4);
+                } else if (rates[item.from] && rates[item.to]) {
+                  rate = formatNumber(rates[item.to] / rates[item.from], 4);
+                } else if (fallbackRates.USD[item.to]) {
+                  rate = formatNumber(fallbackRates.USD[item.to], 2);
+                }
+              }
+              
+              return (
+                <div key={index} className="bg-gray-50 p-3 rounded-lg text-center">
+                  <p className="text-xs text-gray-500 mb-1">{item.flag}</p>
+                  <p className="font-semibold text-sm">{item.pair}</p>
+                  <p className="text-lg font-bold text-green-600">{rate}</p>
+                  <Badge variant="outline" className="text-xs text-gray-500">
+                    {connectionStatus === 'online' ? 'Live' : 'Cached'}
+                  </Badge>
+                </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
@@ -325,25 +448,25 @@ const CurrencyConverter = () => {
         <CardContent className="prose prose-gray max-w-none">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-semibold mb-3">Основные валюты</h3>
+              <h3 className="text-lg font-semibold mb-3">Поддерживаемые регионы</h3>
               <div className="space-y-2 text-sm">
-                <p><strong>USD 🇺🇸</strong> — Доллар США, резервная валюта мира</p>
-                <p><strong>EUR 🇪🇺</strong> — Евро, валюта Европейского союза</p>
-                <p><strong>RUB 🇷🇺</strong> — Российский рубль, национальная валюта РФ</p>
-                <p><strong>GBP 🇬🇧</strong> — Фунт стерлингов, валюта Великобритании</p>
-                <p><strong>CNY 🇨🇳</strong> — Китайский юань, валюта КНР</p>
-                <p><strong>JPY 🇯🇵</strong> — Японская иена, валюта Японии</p>
+                <p><strong>🌍 Европа:</strong> EUR, GBP, CHF, SEK, NOK, DKK, PLN, CZK, HUF, TRY</p>
+                <p><strong>🌏 Азия:</strong> JPY, CNY, SGD, HKD, KRW, INR, THB</p>
+                <p><strong>🌎 Америка:</strong> USD, CAD, BRL, MXN, ARS</p>
+                <p><strong>🌊 Океания:</strong> AUD, NZD</p>
+                <p><strong>🏜️ Ближний Восток:</strong> AED, SAR</p>
+                <p><strong>🦁 Африка:</strong> ZAR</p>
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-3">Факторы влияния на курс</h3>
+              <h3 className="text-lg font-semibold mb-3">Особенности работы</h3>
               <div className="space-y-2 text-sm">
-                <p><strong>Экономические показатели:</strong> ВВП, инфляция, безработица</p>
-                <p><strong>Политические события:</strong> выборы, международные отношения</p>
-                <p><strong>Центробанки:</strong> процентные ставки, денежная политика</p>
-                <p><strong>Торговый баланс:</strong> экспорт и импорт товаров</p>
-                <p><strong>Геополитика:</strong> войны, санкции, международные договоры</p>
-                <p><strong>Спекуляции:</strong> активность трейдеров и инвесторов</p>
+                <p><strong>🔄 Автообновление:</strong> курсы обновляются каждые 5 минут</p>
+                <p><strong>🌐 Реальные данные:</strong> курсы получаются через API</p>
+                <p><strong>💾 Офлайн режим:</strong> резервные курсы при недоступности API</p>
+                <p><strong>🎯 Точность:</strong> расчеты до 4 знаков после запятой</p>
+                <p><strong>⚡ Быстрота:</strong> мгновенная конвертация</p>
+                <p><strong>🔒 Надежность:</strong> проверенные источники данных</p>
               </div>
             </div>
           </div>
@@ -351,10 +474,12 @@ const CurrencyConverter = () => {
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <h4 className="font-semibold text-blue-800 mb-2">📊 Важная информация:</h4>
             <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Курсы валют обновляются в реальном времени</li>
-              <li>• Банки и обменники берут комиссию за конвертацию</li>
+              <li>• Курсы валют обновляются в реальном времени через внешний API</li>
+              <li>• При недоступности интернета используются сохраненные резервные курсы</li>
+              <li>• Банки и обменники берут комиссию за конвертацию (обычно 1-3%)</li>
               <li>• Курсы могут значительно колебаться в течение дня</li>
-              <li>• Для крупных сумм проверяйте актуальные курсы у банков</li>
+              <li>• Для крупных сумм всегда проверяйте актуальные курсы у банков</li>
+              <li>• Калькулятор предоставляет справочную информацию</li>
             </ul>
           </div>
         </CardContent>
