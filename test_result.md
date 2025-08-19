@@ -104,6 +104,55 @@
 
 user_problem_statement: "Пользователь хочет сделать все калькуляторы в приложении CALC.IT полностью функциональными. Многие калькуляторы находятся в статусе 'в разработке' или 'скоро' и не работают. Необходимо доделать их полностью работоспособными."
 
+backend:
+  - task: "FastAPI основные endpoints"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Протестированы все основные API endpoints: GET /api/ (Hello World), POST /api/status (создание записей), GET /api/status (получение записей). Все работают корректно с кодом 200."
+  
+  - task: "MongoDB подключение и интеграция"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "MongoDB подключение работает корректно. Данные успешно сохраняются через POST /api/status и извлекаются через GET /api/status. Использует UUID для ID и datetime для timestamp."
+  
+  - task: "CORS настройки для фронтенда"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "CORS настроен корректно. Preflight запросы обрабатываются правильно (статус 200). Заголовки Access-Control-Allow-Origin, Methods, Headers настроены для работы с фронтендом."
+  
+  - task: "Обработка ошибок API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "API корректно обрабатывает ошибки: несуществующие endpoints возвращают 404, невалидные данные возвращают 422. FastAPI валидация работает правильно."
+
 frontend:
   - task: "Полная реализация всех калькуляторов"
     implemented: true
