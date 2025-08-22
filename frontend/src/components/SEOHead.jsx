@@ -8,7 +8,7 @@ const SEOHead = ({
   canonicalUrl, 
   ogImage,
   structuredData,
-  noindex = false 
+  noindex = true 
 }) => {
   const baseUrl = 'https://calcit-hub.preview.emergentagent.com';
   const fullCanonicalUrl = canonicalUrl ? `${baseUrl}${canonicalUrl}` : baseUrl;
