@@ -36,9 +36,9 @@ const CalculatorNavigation = ({ currentCalculatorId }) => {
     
     // Если в текущей категории мало калькуляторов, добавляем из других категорий
     if (sameCategory.length < 3) {
-      const otherCalculators = Object.values(calculatorData)
-        .filter(cat => cat !== currentCategory)
-        .flatMap(cat => cat.calculators)
+      const otherCalculators = Object.entries(calculatorData)
+        .filter(([catId, cat]) => catId !== currentCategory.id)
+        .flatMap(([catId, cat]) => cat.calculators)
         .filter(calc => calc.featured || calc.popular)
         .slice(0, 3 - sameCategory.length);
       
