@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Анализировал документ с дополнительными требованиями по SEO и UX улучшениям: 1) Улучшенные структурированные данные JSON-LD для каждого калькулятора. 2) UX улучшения: правильные атрибуты input (inputmode, min, max, step), валидация, автоматический пересчет с debounce, accessibility. 3) Навигация между калькуляторами. 4) Расширенный футер с дополнительными страницами. 5) Оптимизация производительности (Core Web Vitals)."
+user_problem_statement: "Проблема с производительностью сайта на мобильных устройствах. PageSpeed Insights показывает низкие баллы: Производительность 68, FCP 6.7 сек, LCP 7.3 сек. Требуется оптимизация согласно детальным инструкциям для достижения цели: мобильный PageSpeed 85+, LCP/FCP ≤ 2.5-3.0с, TBT < 150мс."
 
 backend:
   - task: "Backend API functionality"
@@ -121,20 +121,17 @@ backend:
         comment: "ПОЛНОЕ ТЕСТИРОВАНИЕ BACKEND API ЗАВЕРШЕНО УСПЕШНО ✅ Все 6 тестов прошли: 1) GET /api/ endpoint - возвращает корректный ответ {'message': 'Hello World'} 2) CORS настройки - правильно настроены для frontend домена, поддерживает preflight запросы 3) POST /api/status - создает записи с валидными UUID, client_name и timestamp 4) GET /api/status - возвращает список всех записей в корректном формате 5) MongoDB интеграция - данные корректно сохраняются и извлекаются из базы 6) Обработка ошибок - возвращает 404 для несуществующих endpoints и 422 для невалидных данных. Все сервисы (backend, frontend, mongodb) запущены и работают стабильно."
 
 frontend:
-  - task: "SEO и UX улучшения приложения CALC.IT"
+  - task: "Оптимизация производительности сайта для мобильных устройств"
     implemented: true
-    working: true
-    file: "/app/frontend/src/components/**/*.jsx"
+    working: false
+    file: "/app/frontend/src/**/*.{js,jsx,css,html}"
     stuck_count: 0
-    priority: "high"
-    needs_retesting: false
+    priority: "critical"
+    needs_retesting: true
     status_history:
       - working: false
         agent: "main"
-        comment: "РЕАЛИЗОВАНЫ МАСШТАБНЫЕ SEO И UX УЛУЧШЕНИЯ: ✅ Создан универсальный хук useCalculatorInput с валидацией, debounce 300ms и автоматическим пересчетом. ✅ Компонент EnhancedInput с полной поддержкой accessibility (label/id, aria-attributes, inputmode). ✅ ResultsContainer для предотвращения CLS с фиксированной высотой. ✅ CalculatorNavigation для навигации между похожими калькуляторами. ✅ Обновлен SEOHead с расширенными структурированными данными WebApplication Schema, preload ресурсов, meta для мобильных. ✅ Улучшен Footer с 4 колонками: О проекте, Калькуляторы, Популярные, Информация (ссылки на 'О проекте', 'Политика конфиденциальности', 'Контакты'). ✅ Создан EnhancedMortgageCalculator как пример внедрения всех UX улучшений. ✅ Обновлен index.css с анимациями, performance оптимизациями, mobile optimizations. ✅ CalculatorPage обновлена с хлебными крошками, H1 заголовками, интеграцией навигации."
-      - working: true
-        agent: "testing"
-        comment: "ПОЛНОЕ ТЕСТИРОВАНИЕ FRONTEND ЗАВЕРШЕНО УСПЕШНО ✅ Все основные SEO и UX улучшения работают корректно: 1) SEO элементы: H1 заголовки, meta описания, структурированные данные JSON-LD, хлебные крошки на всех страницах калькуляторов ✅ 2) Footer с 4 колонками и всеми необходимыми ссылками (О проекте, Политика конфиденциальности, Пользовательское соглашение) ✅ 3) Навигация между калькуляторами работает, показывает 3 связанных калькулятора из той же категории ✅ 4) UX улучшения: правильные label/id связи для accessibility, debounce в input полях, автоматический пересчет ✅ 5) Мобильная адаптивность: все калькуляторы корректно работают на мобильных устройствах ✅ 6) Калькуляторы функциональны: Ипотечный (45,445₽ платеж), Конвертер валют (80,600₽ за $1000), BMI калькулятор (22.9 ИМТ) ✅ 7) Performance оптимизации: 50+ элементов с анимациями/переходами, theme-color meta тег ✅ 8) API интеграции: внешние запросы к exchangerate-api.com для актуальных курсов валют работают ✅ Minor: Один HTML validation warning о вложенности div в p элементе, отсутствуют inputmode атрибуты и preload ссылки, но это не влияет на функциональность."
+        comment: "РЕАЛИЗОВАНЫ МАСШТАБНЫЕ ОПТИМИЗАЦИИ ПРОИЗВОДИТЕЛЬНОСТИ: ✅ Lazy Loading: Все калькуляторы (24 компонента) переведены на React.lazy с Suspense для уменьшения initial bundle size. ✅ Critical CSS: Встроен минимальный CSS для первого экрана в index.html. ✅ Browserslist: Обновлен на современные браузеры (last 2 versions) для меньшего bundle size. ✅ CRACO Config: Настроена производственная оптимизация с code splitting (react, radix-ui, lucide, vendors chunks), отключены source maps. ✅ Index.html: Добавлены preconnect/dns-prefetch для внешних API, критический CSS, оптимизированный PostHog (idle loading), улучшенные meta теги. ✅ CSS: Добавлены content-visibility для отложенных секций, GPU ускорение, мобильные оптимизации. ✅ HomePage: Применены section-late классы для некритических секций (Categories, Features). ✅ Babel: Настроено удаление console.log в production."
 
 metadata:
   created_by: "main_agent"
