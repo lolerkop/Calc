@@ -289,7 +289,7 @@ const HomePage = () => {
         </div>
 
         {/* Features Section */}
-        <div className="mb-16">
+        <div className="section-late mb-16">
           <h2 className="text-3xl font-bold text-center mb-8">Преимущества CALC.IT</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => {
