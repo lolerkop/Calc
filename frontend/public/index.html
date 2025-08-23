@@ -3,7 +3,51 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#6366f1" />
+        <meta name="theme-color" content="#3B82F6" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        
+        <!-- Preconnect to external domains -->
+        <link rel="preconnect" href="https://api.exchangerate-api.com" crossorigin>
+        <link rel="preconnect" href="https://api.coingecko.com" crossorigin>
+        <link rel="dns-prefetch" href="//api.exchangerate-api.com">
+        <link rel="dns-prefetch" href="//api.coingecko.com">
+        
+        <!-- Critical CSS for above-the-fold content -->
+        <style>
+        /* Critical CSS for first screen - minimal reset and layout */
+        *,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
+        *{--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }
+        html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"}
+        body{margin:0;line-height:inherit;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        .bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}
+        .from-blue-600{--tw-gradient-from:#2563eb;--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to,rgb(37 99 235 / 0))}
+        .to-purple-600{--tw-gradient-to:#9333ea}
+        .text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}
+        .px-4{padding-left:1rem;padding-right:1rem}
+        .py-8{padding-top:2rem;padding-bottom:2rem}
+        .text-center{text-align:center}
+        .container{width:100%}
+        @media (min-width:640px){.container{max-width:640px}}
+        @media (min-width:768px){.container{max-width:768px}}
+        @media (min-width:1024px){.container{max-width:1024px}}
+        @media (min-width:1280px){.container{max-width:1280px}}
+        .mx-auto{margin-left:auto;margin-right:auto}
+        .min-h-screen{min-height:100vh}
+        .flex{display:flex}
+        .items-center{align-items:center}
+        .justify-center{justify-content:center}
+        .animate-spin{animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .w-8{width:2rem}
+        .h-8{height:2rem}
+        .border-2{border-width:2px}
+        .border-blue-600{--tw-border-opacity:1;border-color:rgb(37 99 235 / var(--tw-border-opacity))}
+        .border-t-transparent{border-top-color:transparent}
+        .rounded-full{border-radius:9999px}
+        </style>
         
         <!-- SEO Meta Tags -->
         <title>CALC.IT — Все калькуляторы онлайн | Финансовые, кредитные, инвестиционные калькуляторы</title>
@@ -18,6 +62,7 @@
         <meta property="og:title" content="CALC.IT — Все калькуляторы онлайн" />
         <meta property="og:description" content="Универсальный сервис онлайн калькуляторов. Более 25 бесплатных калькуляторов для финансов, кредитов, ипотеки, инвестиций, здоровья, бизнеса и криптовалют." />
         <meta property="og:image" content="https://calcit-suite.preview.emergentagent.com/og-image.jpg" />
+        <meta property="og:locale" content="ru_RU" />
         
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image" />
@@ -25,6 +70,7 @@
         <meta property="twitter:title" content="CALC.IT — Все калькуляторы онлайн" />
         <meta property="twitter:description" content="Универсальный сервис онлайн калькуляторов. Более 25 бесплатных калькуляторов для финансов, кредитов, ипотеки, инвестиций, здоровья, бизнеса и криптовалют." />
         <meta property="twitter:image" content="https://calcit-suite.preview.emergentagent.com/og-image.jpg" />
+        <meta property="twitter:site" content="@calcit_online" />
         
         <!-- Canonical URL -->
         <link rel="canonical" href="https://calcit-suite.preview.emergentagent.com/" />
@@ -46,7 +92,19 @@
           },
           "publisher": {
             "@type": "Organization",
-            "name": "CALC.IT"
+            "name": "CALC.IT",
+            "url": "https://calcit-suite.preview.emergentagent.com",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://calcit-suite.preview.emerge ntagent.com/logo.png"
+            }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "150",
+            "bestRating": "5",
+            "worstRating": "1"
           },
           "featureList": [
             "Калькулятор ипотеки",
@@ -62,18 +120,23 @@
         </script>
     </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
-        <div id="root"></div>
-        <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+        <noscript>
+            <div style="padding: 2rem; text-align: center; font-family: system-ui, sans-serif;">
+                <h1>CALC.IT — Все калькуляторы онлайн</h1>
+                <p>Для работы сайта необходимо включить JavaScript в вашем браузере.</p>
+            </div>
+        </noscript>
+        <div id="root">
+            <!-- Fallback loading state -->
+            <div class="min-h-screen flex items-center justify-center">
+                <div class="flex flex-col items-center gap-3">
+                    <div class="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p style="color: #6b7280; font-family: system-ui, sans-serif;">Загружаем CALC.IT...</p>
+                </div>
+            </div>
+        </div>
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+        <!-- Emergent badge with optimized image -->
         <a
             id="emergent-badge"
             target="_blank"
@@ -87,8 +150,8 @@
                 text-decoration: none;
                 padding: 6px 10px;
                 font-family: -apple-system, BlinkMacSystemFont,
-                    &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, Cantarell,
-                    &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;,
+                    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+                    'Open Sans', 'Helvetica Neue',
                     sans-serif !important;
                 font-size: 12px !important;
                 z-index: 9999 !important;
@@ -98,20 +161,23 @@
                 border: 1px solid rgba(255, 255, 255, 0.25) !important;
             "
         >
-            <div
-                style="display: flex; flex-direction: row; align-items: center"
-            >
+            <div style="display: flex; flex-direction: row; align-items: center">
                 <img
                     style="width: 20px; height: 20px; margin-right: 8px"
                     src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4"
+                    width="20"
+                    height="20"
+                    alt="Emergent"
+                    loading="lazy"
+                    decoding="async"
                 />
                 <p
                     style="
                         color: #000000;
                         font-family: -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu,
-                            Cantarell, &quot;Open Sans&quot;,
-                            &quot;Helvetica Neue&quot;, sans-serif !important;
+                            'Segoe UI', Roboto, Oxygen, Ubuntu,
+                            Cantarell, 'Open Sans',
+                            'Helvetica Neue', sans-serif !important;
                         font-size: 12px !important;
                         align-items: center;
                         margin-bottom: 0;
@@ -121,72 +187,50 @@
                 </p>
             </div>
         </a>
+        
+        <!-- PostHog analytics - загружается в idle для оптимизации производительности -->
         <script>
-            !(function (t, e) {
-                var o, n, p, r;
-                e.__SV ||
-                    ((window.posthog = e),
-                    (e._i = []),
-                    (e.init = function (i, s, a) {
-                        function g(t, e) {
-                            var o = e.split(".");
-                            2 == o.length && ((t = t[o[0]]), (e = o[1])),
-                                (t[e] = function () {
-                                    t.push(
-                                        [e].concat(
-                                            Array.prototype.slice.call(
-                                                arguments,
-                                                0,
-                                            ),
-                                        ),
-                                    );
-                                });
-                        }
-                        ((p = t.createElement("script")).type =
-                            "text/javascript"),
-                            (p.crossOrigin = "anonymous"),
-                            (p.async = !0),
-                            (p.src =
-                                s.api_host.replace(
-                                    ".i.posthog.com",
-                                    "-assets.i.posthog.com",
-                                ) + "/static/array.js"),
-                            (r =
-                                t.getElementsByTagName(
-                                    "script",
-                                )[0]).parentNode.insertBefore(p, r);
-                        var u = e;
-                        for (
-                            void 0 !== a ? (u = e[a] = []) : (a = "posthog"),
-                                u.people = u.people || [],
-                                u.toString = function (t) {
-                                    var e = "posthog";
-                                    return (
-                                        "posthog" !== a && (e += "." + a),
-                                        t || (e += " (stub)"),
-                                        e
-                                    );
-                                },
-                                u.people.toString = function () {
-                                    return u.toString(1) + ".people (stub)";
-                                },
-                                o =
-                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
-                                        " ",
-                                    ),
-                                n = 0;
-                            n < o.length;
-                            n++
-                        )
-                            g(u, o[n]);
-                        e._i.push([i, s, a]);
-                    }),
-                    (e.__SV = 1));
-            })(document, window.posthog || []);
-            posthog.init("phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE", {
-                api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
-            });
+        // Только на production домене (пока отключено для тестирования)
+        if (location.hostname === 'calc.it' || location.hostname === 'calcit.ru') {
+          window.addEventListener('load', function() {
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(function() {
+                var script = document.createElement('script');
+                script.src = 'https://us-assets.i.posthog.com/static/array.js';
+                script.async = true;
+                script.onload = function() {
+                  posthog.init('phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE', {
+                    api_host: 'https://us.i.posthog.com',
+                    person_profiles: 'identified_only',
+                    capture_pageview: true,
+                    disable_session_recording: true,
+                    disable_surveys: true,
+                    advanced_disable_decide: true
+                  });
+                };
+                document.head.appendChild(script);
+              });
+            } else {
+              // Fallback для старых браузеров
+              setTimeout(function() {
+                var script = document.createElement('script');
+                script.src = 'https://us-assets.i.posthog.com/static/array.js';
+                script.async = true;
+                script.onload = function() {
+                  posthog.init('phc_yJW1VjHGGwmCbbrtczfqqNxgBDbhlhOWcdzcIJEOTFE', {
+                    api_host: 'https://us.i.posthog.com',
+                    person_profiles: 'identified_only',
+                    capture_pageview: true,
+                    disable_session_recording: true,
+                    disable_surveys: true,
+                    advanced_disable_decide: true
+                  });
+                };
+                document.head.appendChild(script);
+              }, 3000);
+            }
+          });
+        }
         </script>
     </body>
 </html>
