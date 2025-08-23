@@ -57,7 +57,7 @@ const CalculatorNavigation = ({ currentCalculatorId }) => {
           <Calculator className="w-5 h-5 text-blue-600" />
           <h3 className="text-lg font-semibold">Другие калькуляторы</h3>
           <Badge variant="secondary" className="ml-auto">
-            {currentCategory.name}
+            {currentCategory.title}
           </Badge>
         </div>
         
