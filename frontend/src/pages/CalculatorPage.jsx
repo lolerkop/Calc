@@ -177,6 +177,9 @@ const CalculatorPage = () => {
           {renderCalculator()}
         </div>
 
+        {/* Navigation between calculators */}
+        <CalculatorNavigation currentCalculatorId={calculatorId} />
+
         {/* SEO Content */}
         <SEOContent seoData={seoData} />
 
