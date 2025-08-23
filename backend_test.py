@@ -11,7 +11,7 @@ from datetime import datetime
 import uuid
 
 # Get backend URL from frontend .env file
-BACKEND_URL = "https://calcit-hub.preview.emergentagent.com/api"
+BACKEND_URL = "https://calcit-suite.preview.emergentagent.com/api"
 
 def test_root_endpoint():
     """Test GET /api/ endpoint"""
@@ -46,7 +46,7 @@ def test_cors_headers():
     try:
         # Test preflight request
         headers = {
-            'Origin': 'https://calcit-hub.preview.emergentagent.com',
+            'Origin': 'https://calcit-suite.preview.emergentagent.com',
             'Access-Control-Request-Method': 'POST',
             'Access-Control-Request-Headers': 'Content-Type'
         }

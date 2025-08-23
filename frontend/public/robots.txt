@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /
 
 # Временно закрыт для индексации
-# Sitemap: https://calcit-hub.preview.emergentagent.com/sitemap.xml
+# Sitemap: https://calcit-suite.preview.emergentagent.com/sitemap.xml

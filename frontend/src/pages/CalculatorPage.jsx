@@ -64,7 +64,7 @@ const CalculatorPage = () => {
     "@type": "WebApplication",
     "name": calculatorData.name,
     "description": calculatorData.description,
-    "url": `https://calcit-hub.preview.emergentagent.com/calculator/${calculatorId}`,
+    "url": `https://calcit-suite.preview.emergentagent.com/calculator/${calculatorId}`,
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": {

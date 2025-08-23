@@ -153,7 +153,7 @@ const HomePage = () => {
     "@type": "WebApplication",
     "name": "CALC.IT",
     "description": homeSEOData.description,
-    "url": "https://calcit-hub.preview.emergentagent.com",
+    "url": "https://calcit-suite.preview.emergentagent.com",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Any",
     "offers": {

@@ -10,7 +10,7 @@ const SEOHead = ({
   structuredData,
   noindex = true 
 }) => {
-  const baseUrl = 'https://calcit-hub.preview.emergentagent.com';
+  const baseUrl = 'https://calcit-suite.preview.emergentagent.com';
   const fullCanonicalUrl = canonicalUrl ? `${baseUrl}${canonicalUrl}` : baseUrl;
   const defaultImage = `${baseUrl}/og-image.jpg`;
   

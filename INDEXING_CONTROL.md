@@ -21,7 +21,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://calcit-hub.preview.emergentagent.com/sitemap.xml
+Sitemap: https://calcit-suite.preview.emergentagent.com/sitemap.xml
 
 # Allow specific search bots
 User-agent: Googlebot
