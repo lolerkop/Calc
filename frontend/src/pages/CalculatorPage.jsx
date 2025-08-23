@@ -33,6 +33,16 @@ const MiningCalculator = React.lazy(() => import("../components/calculators/Mini
 const StakingCalculator = React.lazy(() => import("../components/calculators/StakingCalculator"));
 const CryptoConverter = React.lazy(() => import("../components/calculators/CryptoConverter"));
 
+// Компонент загрузки для Suspense
+const CalculatorLoader = () => (
+  <div className="flex items-center justify-center min-h-[400px]">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-gray-600">Загружаем калькулятор...</p>
+    </div>
+  </div>
+);
+
 const CalculatorPage = () => {
   const { calculatorId } = useParams();
   const calculatorData = getCalculatorData(calculatorId);
