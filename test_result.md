@@ -149,7 +149,7 @@ test_plan:
   test_all: true
   test_priority: "critical"
   backend_testing_complete: true
-  frontend_testing_complete: false
+  frontend_testing_complete: true
 
 agent_communication:
   - agent: "main"
