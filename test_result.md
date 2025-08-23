@@ -135,23 +135,19 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "3.0"
-  test_sequence: 4
+  version: "4.0"
+  test_sequence: 5
   run_ui: false
 
 test_plan:
   current_focus:
-    - "SEO и UX улучшения приложения CALC.IT"
+    - "Оптимизация производительности сайта для мобильных устройств"
   stuck_tasks: []
   test_all: true
-  test_priority: "high_first"
+  test_priority: "critical"
   backend_testing_complete: true
-  frontend_testing_complete: true
+  frontend_testing_complete: false
 
 agent_communication:
   - agent: "main"
-    message: "Анализировал загруженный документ с требованиями по SEO/UX улучшениям. Реализовал универсальные компоненты для улучшенного UX всех калькуляторов: валидация с debounce, accessibility, навигация, расширенные SEO данные, оптимизации производительности. Создан пример EnhancedMortgageCalculator демонстрирующий все новые возможности. Готово к тестированию frontend'а."
-  - agent: "testing"
-    message: "BACKEND ТЕСТИРОВАНИЕ ЗАВЕРШЕНО УСПЕШНО! Все 6 критических тестов прошли: ✅ Основные API endpoints работают корректно ✅ CORS правильно настроен для frontend ✅ MongoDB подключение и сохранение данных работает ✅ Обработка ошибок функционирует правильно ✅ Все сервисы запущены и стабильны. Backend готов для production использования. Масштабные frontend улучшения не повлияли на стабильность backend API."
-  - agent: "testing"
-    message: "FRONTEND ТЕСТИРОВАНИЕ ЗАВЕРШЕНО УСПЕШНО! ✅ Все масштабные SEO и UX улучшения работают корректно. Протестированы: SEO элементы (H1, meta, JSON-LD, breadcrumbs), обновленный Footer с 4 колонками, навигация между калькуляторами, UX улучшения (accessibility, debounce, автопересчет), мобильная адаптивность, функциональность калькуляторов (ипотека, валюты, BMI), performance оптимизации, API интеграции. Приложение готово к production использованию. Minor issues не влияют на функциональность."
+    message: "Проанализировал производительностные проблемы PageSpeed Insights. Реализовал комплексные оптимизации: lazy loading всех калькуляторов, critical CSS, оптимизация bundle с code splitting, preconnect для внешних API, отложенная загрузка аналитики PostHog в idle, mobile-first CSS оптимизации, content-visibility для некритических секций. Готово к тестированию производительности frontend'а."
