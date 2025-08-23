@@ -93,7 +93,7 @@ const CalculatorNavigation = ({ currentCalculatorId }) => {
             to={`/category/${currentCategory.id}`}
             className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
           >
-            Все калькуляторы категории "{currentCategory.name}"
+            Все калькуляторы категории "{currentCategory.title}"
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
