@@ -5,6 +5,7 @@ import { getCalculatorData, getCategoryData } from "../utils/calculatorData";
 import { getSEOData } from "../utils/seoData";
 import SEOHead from "../components/SEOHead";
 import SEOContent from "../components/SEOContent";
+import CalculatorNavigation from "../components/CalculatorNavigation";
 import CompoundInterestCalculator from "../components/calculators/CompoundInterestCalculator";
 import InvestmentCalculator from "../components/calculators/InvestmentCalculator";
 import DepositCalculator from "../components/calculators/DepositCalculator";
