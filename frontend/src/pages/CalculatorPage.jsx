@@ -186,7 +186,9 @@ const CalculatorPage = () => {
 
         {/* Calculator Component */}
         <div className="mb-12">
-          {renderCalculator()}
+          <Suspense fallback={<CalculatorLoader />}>
+            {renderCalculator()}
+          </Suspense>
         </div>
 
         {/* Navigation between calculators */}
