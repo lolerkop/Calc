@@ -14,7 +14,7 @@ const CalculatorNavigation = ({ currentCalculatorId }) => {
 
   // Получаем текущий калькулятор и его категорию
   const getCurrentCalculatorInfo = () => {
-    for (const category of calculatorData.categories) {
+    for (const category of Object.values(calculatorData)) {
       const calculator = category.calculators.find(calc => calc.id === activeCalculatorId);
       if (calculator) {
         return { calculator, category };
